@@ -1,0 +1,440 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"> 
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> 
+<meta name="description" content="" /> 
+<meta name="keywords" content="Breitensport, Radsport, Radfahren, RTF, Tourenfahren, Volksradfahren, CTF, rad-net"> 
+  <link rel="stylesheet" href="/assets/components/smartoptimizer/connector.php?%2Ftemplates%2Fbreitensport%2Fdesign.css" type="text/css"> 
+   <!--[if IE  6]>
+   <link rel="stylesheet" href="/templates/breitensport/design_ie6.css" type="text/css">
+  <![endif]-->
+<title>Termine | Breitensport bei rad-net.de</title> 
+<meta name="author" content="rad-net GmbH"> 
+<meta name="language" content="de"> 
+<base href="https://breitensport.rad-net.de/" /> 
+  
+<script type="text/javascript" src="/assets/js/jquery-1.8.2.min.js"></script>  
+<script type="text/javascript" src="/assets/components/smartoptimizer/connector.php?%2Fassets%2Fslimbox%2Fjs%2Fslimbox2.js"></script> 
+<script type="text/javascript" src="/assets/cookie-bar/cookiebar-latest.min.js?theme=flying&tracking=1&thirdparty=1&noGeoIp=1&privacyPage=%2Fdatenschutzhinweise.html"></script>
+<link rel="stylesheet" href="/assets/components/smartoptimizer/connector.php?%2Fassets%2Fslimbox%2Fcss%2Fslimbox2.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="/templates/js/colorbox-master/example1/colorbox.css" />
+<script type="text/javascript" src="/templates/js/piwikload_bs.js"></script>
+<script src="/templates/js/colorbox-master/jquery.colorbox-min.js"></script>
+<meta name="robots" content="index,follow"> 
+
+  
+  
+  <link rel="stylesheet" href="/templates/breitensport/search.css" type="text/css">  
+  <script type="text/javascript" src="/assets/datepicker2/jquery-ui-1.8.23.custom.min.js"></script>
+
+<link href="/assets/datepicker2/jquery-ui-1.8.23.custom.css" rel="stylesheet" type="text/css" />
+
+
+  <script type="text/javascript"  charset="utf-8">
+  $(document).ready(function(){
+    $("#startdate").datepicker({ dateFormat: 'dd.mm.yy' });
+    $('#startdate').datepicker('option', 'dayNamesMin', ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa']);
+    $('#startdate').datepicker('option', 'monthNames', ['Januar','Februar','M&auml;rz','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember']);
+    $('#startdate').datepicker('option', 'firstDay', 1);
+    $('#startdate').datepicker('option', 'prevText', 'einen Monat zurück');
+    $('#startdate').datepicker('option', 'nextText', 'einen Monat vor');    
+    
+    $("#enddate").datepicker({ dateFormat: 'dd.mm.yy' });
+    $('#enddate').datepicker('option', 'dayNamesMin', ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa']);
+    $('#enddate').datepicker('option', 'monthNames', ['Januar','Februar','M&auml;rz','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember']);
+    $('#enddate').datepicker('option', 'firstDay', 1);
+    $('#enddate').datepicker('option', 'prevText', 'einen Monat zurück');
+    $('#enddate').datepicker('option', 'nextText', 'einen Monat vor');  
+  });
+  </script>
+
+  <link rel="stylesheet" href="/assets/ed_functions/autosuggest.css" type="text/css"> 
+  <script type="text/javascript" src="/assets/ed_functions/autosuggest.js"></script>
+</head>   
+<body> 
+<div id="fullpage">
+  <div id="wrapper">
+
+    <div id="inner-wrap">
+      <div id="top">
+        <div id="metamenu">
+            <div style="float: left;" ><img src="/templates/breitensport/images/medienpartner_2025.png"></div>
+<a style="font-weight: bold;" href="http://www.rad-net.de" title="Zu rad-net.de">rad-net.de</a>   
+<a href="verwaltung/login.html" title="Zum Login f&uuml;r Administratoren und Organisation">Login</a>
+<a href="aktuelles/" title="Zur&uuml;ck zur Startseite Breitensport">Start</a>       
+        </div> <!-- Ende Metamenu -->
+        <div id="topimage">
+  <a style="float: left;" href="https://www.rad-net.de/breitensport.htm" title="Willkommen beim Breitensportportal von rad-net.de"><img src="/templates/breitensport/images/topimage2.jpg" border="0" alt="Willkommen beim Breitensportportal von rad-net.de"></a>
+   <a target="_blank" href="https://www.rad-net.de/" title="Zu rad-net.de"><img src="/templates/breitensport/images/logotopimage3.jpg" border="0" alt="Willkommen beim Breitensportportal von rad-net.de"></a>
+</div> <!-- Ende topimage -->
+        <div id="menu">
+          <ul><li class="first active"><a href="breitensportkalender/" title="Aktuelle Termine aus dem Breitensportkalender - RTF, CTF, Volksradfahren" >Breitensportkalender</a></li>
+</ul>
+
+        </div> <!-- Ende menu -->
+      </div> <!-- Ende top -->
+      <div id="inhaltlinks">
+        <h1>rad-net Breitensportkalender</h1>   
+      
+ 
+<form id="terminsuche" action="breitensportkalender/termine/" method="get">
+  
+  <div id="form"> 
+    <div class="skoda">
+        Unterst&uuml;tzt von<br>
+        <a href="http://www.skoda.de" target="_blank" alt="Skoda unterst&uuml;tzt den Breitensport" title="Skoda unterst&uuml;tzt den Breitensport">
+            <img src="/templates/breitensport/images/skoda-logo3.jpg" border="0">
+        </a>
+        
+    </div>
+    <br> 
+    <div style="float: left; width: 450px;">
+    <div class="formrow">
+      <label for="start-date"><span>Datum von</span></label><input style="float: left;" name="startdate" id="startdate" class="date-pick" value="17.07.2026" /><label style="width: 30px; margin: 5px 10px 0 10px; text-align: center;" for="enddate">bis</label><input name="enddate" id="enddate" class="date-pick" value="24.07.2026" />
+    </div>
+    
+    <div class="formrow">
+     <label for="art"><span>Kategorie</span></label>
+    <select name="art">
+       <option value="-1"  selected="selected" >Alle (außer Permanente)</option>
+       <option value="2"   >Radtourenfahrten (RTF)</option>
+       
+       <option value="4"   >Radmarathon</option>
+       <option value="5"   >Radmarathon-Cup Deutschland</option>
+       <option value="6"   >Country-Tourenfahrten (CTF)</option>
+       
+       <option value="10"   >CTF-Permanente</option>
+       <option value="1"   >RTF-Permanente</option>
+       <option value="3"   >Etappenfahrten</option>
+       <option value="7"   >Volksradfahren</option>
+       <option value="8"   >Radwandern</option>
+       <option value="9"   >Deutsches Radsportabzeichen</option>       
+       
+       <option value="12"   >Richtig fit Tag Radfahren</option>
+       
+       
+       
+       <option value="17"   >Brevet</option>
+       <option value="20"   >Gravelride</option>
+       <option value="21"   >Permanent Gravelride</option>
+       <option value="22"   >vRTF</option>
+      </select>
+    </div>
+    
+    <div class="formrow"> 
+    <label for="titel"> 
+        Titel oder RTF-Nr.:        
+    </label> 
+      <input type="text" name="titel" id="titel" style="width: 242px;" value="" /> 
+    <span class="error"></span> 
+  </div>
+      
+      <div class="formrow">     
+    <label for="lv"> 
+        Landesverband:        
+    </label> 
+    <select name="lv" id="lv">
+       <option value="-1"  selected="selected" >Alle</option>
+       <option value="1"   >Baden</option>
+       <option value="2"   >Bayern</option>
+       <option value="14"   >Berlin</option>
+       <option value="3"   >Brandenburg</option>
+       <option value="16"   >Bremen</option>
+       <option value="4"   >Hamburg</option>
+       <option value="5"   >Hessen</option>
+       <option value="17"   >Mecklenburg-Vorpommern</option>
+       <option value="6"   >Niedersachsen</option>       
+       <option value="7"   >Nordrhein-Westfalen</option>
+       <option value="8"   >Rheinland-Pfalz</option>
+       <option value="9"   >Sachsen</option>
+       <option value="18"   >Sachsen-Anhalt</option>
+       <option value="10"   >Saarland</option>
+       <option value="11"   >Schleswig-Holstein</option>
+       <option value="19"   >Thüringen</option>    
+       <option value="12"   >Württemberg</option>
+      </select>
+    </div>
+      
+    
+    <div class="formrow">     
+    <label for="umkreis"> 
+        im Umkreis von:        
+    </label> 
+      <select name="umkreis" id="umkreis" style="float: left; width: 120px;">
+       <option value="-1"  selected="selected" >Alle</option>
+       <option value="20"   >20 km</option>
+       <option value="50"   >50 km</option>
+       <option value="100"   >100 km</option>
+       <option value="200"   >200 km</option>
+       <option value="400"   >400 km</option> 
+      </select>
+    <label for="plz" style="width: 60px; margin: 5px 10px 0 10px; text-align: center;"> 
+        um PLZ:        
+    </label>       
+      <input  style="float: left; width: 50px;" type="text" name="plz" id="plz" value="" /> 
+      <div class="error">&nbsp;</div>
+    </div>
+      
+      
+     <div class="formrow"> 
+    <label> 
+        &nbsp;  
+    </label> 
+       <input style="float: left; width: 20px; margin-right: 5px;" type="checkbox" id="updatet" name="updatet" value="1"  >
+       <label for="updatet"  style="width: 250px; margin-top: -1px;"> Nur Veranstaltungen mit &Auml;nderungen anzeigen</label>   
+      <br><div class="error">&nbsp;</div>
+    </div><br>
+    <input type="hidden" name="tid" value="">
+    <input type="hidden" id ="formproof" name="formproof" value="">  
+    <input type="submit" name="go" class="form-buttons" value="Termine suchen" /> 
+    </div>
+    <br class="clear">
+      </div> <!-- Ende form -->
+     
+</form>
+
+  <script type="text/javascript"> 
+     
+  var options = {
+    script:"/assets/ed_functions/termine.autosuggest.php?json=true&limit=6&",
+    varname:"titel",
+    json:true,
+    shownoresults:false,
+    maxresults:6,
+                            
+    callback: function (obj) { 
+                               document.getElementById('titel').value = obj.value;
+                             }
+  };
+  var as_json = new bsn.AutoSuggest('titel', options);
+  </script>  
+<div align="center" style="margin: 15px 0 15px 0;">Es wurden <strong>15</strong> Treffer zu Ihrer Anfrage gefunden.</div><ul id="tabellen_ul"><li class="tabheader">
+    <div class="zelle" style="width: 30px;"><h2>Art</h2></div>
+              <div class="zelle" style="width: 85px;"><a href="/breitensportkalender/?titel=&startdate=17.07.2026&sortby=&enddate=24.07.2026&art=-1&lv=-1&umkreis=-1&plz=&updatet=&sortbyn=date&sortdirdate=&lstart=0" title="Nach Datum sortieren"><h2>Datum</h2></a></div>
+              <div class="zelle" style="width: 170px;"><a href="/breitensportkalender/?titel=&startdate=17.07.2026&sortby=&enddate=24.07.2026&art=-1&lv=-1&umkreis=-1&plz=&updatet=&sortbyn=titel&sortdirtitel=&lstart=0" title="Nach Titel sortieren"><h2>Titel</h2></a></div>
+              <div class="zelle" style="width: 70px;"><h2>Strecken</h2></div>
+              <div class="zelle" style="width: 170px;"><a href="/breitensportkalender/?titel=&startdate=17.07.2026&sortby=&enddate=24.07.2026&art=-1&lv=-1&umkreis=-1&plz=&updatet=&sortbyn=verein&sortdirverein=&lstart=0" title="Nach Verein sortieren"><h2>Verein</h2></a></div>
+        </li><li class="tabzeile" style="clear: both;">
+      <a class="terminlink" style="height: 65px;" href="/breitensportkalender/termine/2026/warburger-diemel-sauerland-rtf;9976275.html">
+              <div class="zelle" style="width: 30px;text-decoration: line-through;">
+                 <div class="a-wertung" ></div><div class="tooltip">RTF</div>                                                               
+              </div>
+              <div class="zelle" style="width: 85px;text-decoration: line-through;">Sa, 18.07.2026</div>
+              <div class="zelle" style="width: 170px;text-decoration: line-through;">Warburger Diemel-Sauerland-RTF</div>
+              <div class="zelle" style="width: 70px;text-decoration: line-through;">40/<wbr>73/<wbr>103/<wbr>150</div>
+              <div class="zelle" style="width: 170px;text-decoration: line-through;">RSV &#039;98 Warburg e.V. (NRW)</div>
+            </a>
+          </li><li class="tabzeile" style="clear: both;">
+      <a class="terminlink"  href="/breitensportkalender/termine/2026/warburger-diemel-sauerland-marathon;9976276.html">
+              <div class="zelle" style="width: 30px;text-decoration: line-through;">
+                 <div class="marathon" ></div><div class="tooltip">Marathon</div>                                                               
+              </div>
+              <div class="zelle" style="width: 85px;text-decoration: line-through;">Sa, 18.07.2026</div>
+              <div class="zelle" style="width: 170px;text-decoration: line-through;">Warburger Diemel-Sauerland-Marathon</div>
+              <div class="zelle" style="width: 70px;text-decoration: line-through;">204</div>
+              <div class="zelle" style="width: 170px;text-decoration: line-through;">RSV &#039;98 Warburg e.V. (NRW)</div>
+            </a>
+          </li>
+<!-- <div style="width: 468px; height: 60px; margin: -2px auto 2px auto;">
+
+</div> --><li class="tabzeile" style="clear: both;">
+      <a class="terminlink" style="height: 65px;" href="/breitensportkalender/termine/2026/lengerich-teuto-ride-rtf-durch-das-tecklenburger-land-tmt;9976748.html">
+              <div class="zelle" style="width: 30px;">
+                 <div class="a-wertung" ></div><div class="tooltip">RTF</div>                                                               
+              </div>
+              <div class="zelle" style="width: 85px;">Sa, 18.07.2026</div>
+              <div class="zelle" style="width: 170px;">Lengerich Teuto-Ride RTF durch das Tecklenbu......</div>
+              <div class="zelle" style="width: 70px;">45/<wbr>78/<wbr>118/<wbr>153</div>
+              <div class="zelle" style="width: 170px;">RSV Concordia Lengerich e.V. (NRW)</div>
+            </a>
+          </li><li class="tabzeile" style="clear: both;">
+      <a class="terminlink"  href="/breitensportkalender/termine/2026/gravel-for-barbecue;9976756.html">
+              <div class="zelle" style="width: 30px;">
+                 <div class="tooltip"></div>                                                               
+              </div>
+              <div class="zelle" style="width: 85px;">Sa, 18.07.2026</div>
+              <div class="zelle" style="width: 170px;">Gravel for Barbecue</div>
+              <div class="zelle" style="width: 70px;">79/<wbr>101</div>
+              <div class="zelle" style="width: 170px;">RSC Werne 79 e.V. (NRW)</div>
+            </a>
+          </li><li class="tabzeile" style="clear: both;">
+      <a class="terminlink" style="height: 65px;" href="/breitensportkalender/termine/2026/15.-rietberger-radsportclub-rtf;9975927.html">
+              <div class="zelle" style="width: 30px;">
+                 <div class="a-wertung" ></div><div class="tooltip">RTF</div>                                                               
+              </div>
+              <div class="zelle" style="width: 85px;">So, 19.07.2026</div>
+              <div class="zelle" style="width: 170px;">15. Rietberger RadSportClub RTF</div>
+              <div class="zelle" style="width: 70px;">44/<wbr>49/<wbr>74/<wbr>121/<wbr>152</div>
+              <div class="zelle" style="width: 170px;">RSC Rietberg 1992 e.V. (NRW)</div>
+            </a>
+          </li><li class="tabzeile" style="clear: both;">
+      <a class="terminlink" style="height: 65px;" href="/breitensportkalender/termine/2026/19.-go-for-yellow-rtf;9976000.html">
+              <div class="zelle" style="width: 30px;">
+                 <div class="a-wertung" ></div><div class="tooltip">RTF</div>                                                               
+              </div>
+              <div class="zelle" style="width: 85px;">So, 19.07.2026</div>
+              <div class="zelle" style="width: 170px;">19. GO FOR YELLOW RTF</div>
+              <div class="zelle" style="width: 70px;">47/<wbr>83/<wbr>116/<wbr>155</div>
+              <div class="zelle" style="width: 170px;">Radsportclub Visbek e.V. (NDS)</div>
+            </a>
+          </li><li class="tabzeile" style="clear: both;">
+      <a class="terminlink" style="height: 65px;" href="/breitensportkalender/termine/2026/rund-um-die-ravensburg;9976078.html">
+              <div class="zelle" style="width: 30px;">
+                 <div class="a-wertung" ></div><div class="tooltip">RTF</div>                                                               
+              </div>
+              <div class="zelle" style="width: 85px;">So, 19.07.2026</div>
+              <div class="zelle" style="width: 170px;">Rund um die Ravensburg</div>
+              <div class="zelle" style="width: 70px;">35/<wbr>58/<wbr>75/<wbr>119</div>
+              <div class="zelle" style="width: 170px;">RSV Germania Sulzfeld 1906 e.V. (BAD)</div>
+            </a>
+          </li><div align="center" style="margin: 5px 0px;"><!-- Placement: rotation.misc_468x60 (3745937) -->
+<div id="mf3745937" class="mfc1">
+	<script type="text/javascript">if (typeof getHeliosTag =='function') getHeliosTag(3745937, 1);</script>
+</div></div><li class="tabzeile" style="clear: both;">
+      <a class="terminlink" style="height: 65px;" href="/breitensportkalender/termine/2026/29.-radtourenfahrt-rund-um-die-calauer-schweiz;9976194.html">
+              <div class="zelle" style="width: 30px;">
+                 <div class="a-wertung" ></div><div class="tooltip">RTF</div>                                                               
+              </div>
+              <div class="zelle" style="width: 85px;">So, 19.07.2026</div>
+              <div class="zelle" style="width: 170px;">29. Radtourenfahrt "Rund um die Calauer Schweiz"</div>
+              <div class="zelle" style="width: 70px;">30/<wbr>44/<wbr>84/<wbr>120/<wbr>142</div>
+              <div class="zelle" style="width: 170px;">RSV Calau 1890 e.V. (BRA)</div>
+            </a>
+          </li><li class="tabzeile" style="clear: both;">
+      <a class="terminlink" style="height: 65px;" href="/breitensportkalender/termine/2026/41.-pfaffenwinkelradrundfahrt;9976280.html">
+              <div class="zelle" style="width: 30px;">
+                 <div class="a-wertung" ></div><div class="tooltip">RTF</div>                                                               
+              </div>
+              <div class="zelle" style="width: 85px;">So, 19.07.2026</div>
+              <div class="zelle" style="width: 170px;">41. Pfaffenwinkelradrundfahrt</div>
+              <div class="zelle" style="width: 70px;">55/<wbr>80/<wbr>125/<wbr>160</div>
+              <div class="zelle" style="width: 170px;">RC 1977 Altenstadt e.V. (BAY)</div>
+            </a>
+          </li><li class="tabzeile" style="clear: both;">
+      <a class="terminlink"  href="/breitensportkalender/termine/2026/41.-pfaffenwinkelradrundfahrt;9976281.html">
+              <div class="zelle" style="width: 30px;">
+                 <div class="tooltip"></div>                                                               
+              </div>
+              <div class="zelle" style="width: 85px;">So, 19.07.2026</div>
+              <div class="zelle" style="width: 170px;">41. Pfaffenwinkelradrundfahrt</div>
+              <div class="zelle" style="width: 70px;">100</div>
+              <div class="zelle" style="width: 170px;">RC 1977 Altenstadt e.V. (BAY)</div>
+            </a>
+          </li><li class="tabzeile" style="clear: both;">
+      <a class="terminlink" style="height: 65px;" href="/breitensportkalender/termine/2026/39.-condor-flug;9976631.html">
+              <div class="zelle" style="width: 30px;">
+                 <div class="a-wertung" ></div><div class="tooltip">RTF</div>                                                               
+              </div>
+              <div class="zelle" style="width: 85px;">So, 19.07.2026</div>
+              <div class="zelle" style="width: 170px;">39. Condor-Flug</div>
+              <div class="zelle" style="width: 70px;">25/<wbr>41/<wbr>71/<wbr>101/<wbr>151</div>
+              <div class="zelle" style="width: 170px;">TSV Immendorf 1968 e.V. (NRW)</div>
+            </a>
+          </li><li class="tabzeile" style="clear: both;">
+      <a class="terminlink"  href="/breitensportkalender/termine/2026/32.-condor-marathon;9976632.html">
+              <div class="zelle" style="width: 30px;">
+                 <div class="marathon" ></div><div class="tooltip">Marathon</div>                                                               
+              </div>
+              <div class="zelle" style="width: 85px;">So, 19.07.2026</div>
+              <div class="zelle" style="width: 170px;">32. Condor-Marathon</div>
+              <div class="zelle" style="width: 70px;">201</div>
+              <div class="zelle" style="width: 170px;">TSV Immendorf 1968 e.V. (NRW)</div>
+            </a>
+          </li><li class="tabzeile" style="clear: both;">
+      <a class="terminlink" style="height: 65px;" href="/breitensportkalender/termine/2026/15.-rtf-vflstade;9976820.html">
+              <div class="zelle" style="width: 30px;">
+                 <div class="a-wertung" ></div><div class="tooltip">RTF</div>                                                               
+              </div>
+              <div class="zelle" style="width: 85px;">So, 19.07.2026</div>
+              <div class="zelle" style="width: 170px;">15. RTF VfLStade</div>
+              <div class="zelle" style="width: 70px;">53/<wbr>80/<wbr>120/<wbr>153</div>
+              <div class="zelle" style="width: 170px;">VfL Stade v. 1850 e.V. (NDS)</div>
+            </a>
+          </li><li class="tabzeile" style="clear: both;">
+      <a class="terminlink"  href="/breitensportkalender/termine/2026/4.-marathon-des-vfl-stade;9976821.html">
+              <div class="zelle" style="width: 30px;">
+                 <div class="marathon" ></div><div class="tooltip">Marathon</div>                                                               
+              </div>
+              <div class="zelle" style="width: 85px;">So, 19.07.2026</div>
+              <div class="zelle" style="width: 170px;">4. Marathon des VfL-Stade</div>
+              <div class="zelle" style="width: 70px;">211</div>
+              <div class="zelle" style="width: 170px;">VfL Stade v. 1850 e.V. (NDS)</div>
+            </a>
+          </li><li class="tabzeile" style="clear: both;">
+      <a class="terminlink" style="height: 65px;" href="/breitensportkalender/termine/2026/hochprevence-2026-rtb;9977032.html">
+              <div class="zelle" style="width: 30px;">
+                 <div class="sonstige" ></div><div class="tooltip">Sonstige</div>                                                               
+              </div>
+              <div class="zelle" style="width: 85px;">So, 19.07.2026</div>
+              <div class="zelle" style="width: 170px;">Hochprevence 2026 RTB</div>
+              <div class="zelle" style="width: 70px;">62/<wbr>162/<wbr>256/<wbr>368/<wbr>497/<wbr>591/<wbr>708</div>
+              <div class="zelle" style="width: 170px;">Rad-Treff Borchen e.V. (NRW)</div>
+            </a>
+          </li></ul>
+       
+        
+      </div> <!-- Ende inhaltlinks -->
+      <div id="inhaltrechts">
+        
+<!-- <div style="width: 240px; height: 120px; margin: 10px 0 10px 35px; z-index: 999;">
+
+</div> -->
+        <div id="contentbox">
+  <div class="cbtop"><h2>Aus den Vereinen</h2></div>
+  <div class="cbmain">
+     <div class="content">
+      <p class="datum">04.05.2025, 13:05 Uhr | RV Endspurt Hamburg v. 1905 e. V.:</p><br class="clear">
+<h3><a href="aus-den-radsport-vereinen/rv-endspurt-hamburg-v.-1905-e.-v/endspurt-rudi-bode-rtf-4.5.2025.html" title="Weiterlesen: Endspurt Rudi-Bode-RTF 4.5.2025 | RV Endspurt Hamburg v. 1905 e. V.">Endspurt Rudi-Bode-RTF 4.5.2025 | RV Endspurt Hamburg v. 1905 e. V.</a></h3>
+
+
+
+<p class="datum">23.07.2024, 02:07 Uhr | RSC Kattenberg von 1997 e.V.:</p><br class="clear">
+<h3><a href="aus-den-radsport-vereinen/rsc-kattenberg-von-1997-e.v/hitzeschlacht-am-kattenberg-/-21.07.2024.html" title="Weiterlesen: Hitzeschlacht am Kattenberg / 21.07.2024 | RSC Kattenberg von 1997 e.V.">Hitzeschlacht am Kattenberg / 21.07.2024 | RSC Kattenberg von 1997 e.V.</a></h3>
+
+
+
+<p class="datum">03.04.2024, 19:04 Uhr | RV Endspurt Hamburg v. 1905 e. V.:</p><br class="clear">
+<h3><a href="aus-den-radsport-vereinen/rv-endspurt-hamburg-v.-1905-e.-v/endpsurt-rudi-bode-rtf-28.4.2024-anmeldung-online.html" title="Weiterlesen: Endpsurt Rudi-Bode-RTF 28.4.2024 - Anmeldung online | RV Endspurt Hamburg v. 1905 e. V.">Endpsurt Rudi-Bode-RTF 28.4.2024 - Anmeldung online | RV Endspurt Hamburg v. 1905 e. V.</a></h3>
+
+
+
+<p class="datum">03.04.2024, 19:04 Uhr | RV Endspurt Hamburg v. 1905 e. V.:</p><br class="clear">
+<h3><a href="aus-den-radsport-vereinen/rv-endspurt-hamburg-v.-1905-e.-v/endspurt-rudi-bode-rtf-28.4.2024-anmeldung-online.html" title="Weiterlesen: Endspurt Rudi-Bode-RTF 28.4.2024 - Anmeldung online | RV Endspurt Hamburg v. 1905 e. V.">Endspurt Rudi-Bode-RTF 28.4.2024 - Anmeldung online | RV Endspurt Hamburg v. 1905 e. V.</a></h3>
+
+
+
+<p class="datum">26.03.2024, 16:03 Uhr | RSC Kattenberg von 1997 e.V.:</p><br class="clear">
+<h3><a href="aus-den-radsport-vereinen/rsc-kattenberg-von-1997-e.v/rmcd-und-nc-beim-rsc-kattenberg.html" title="Weiterlesen: RMCD und NC beim RSC Kattenberg | RSC Kattenberg von 1997 e.V.">RMCD und NC beim RSC Kattenberg | RSC Kattenberg von 1997 e.V.</a></h3>
+
+
+
+     <a class="more" href="aus-den-radsport-vereinen.html">Weitere Eintr&auml;ge ...&raquo;</a>
+     </div>  
+   </div> <!-- cbmain -->
+  <div class="cbbottom"></div>
+</div> <!-- Ende contentbox -->
+        
+        
+      </div> <!-- Ende inhaltrechts -->
+      
+      
+      <div style="clear: both;"></div>
+        <div id="footer">
+  <p><a href="datenschutzhinweise.html" title="Datenschutzhinweise zu dieser Seite">Datenschutzhinweise</a>&nbsp;|&nbsp;<a href="https://www.rad-net.de/ajax.aspx/Impressum/D/Impressum.html" target="_blank" title="Impressum von rad-net.de">Impressum</a></p>
+  
+  
+</div>
+
+
+    </div> <!-- Ende inner-wrap -->
+  </div> <!-- Ende Wrapper -->
+<div id="mf3745936" class="mfc154">
+
+</div> 
+  
+  </div> <!-- Ende Fullpage -->
+ 
+</body>
+</html>

@@ -1,0 +1,60 @@
+{
+  "name": "radnet-breitensport",
+  "version": "0.1.0",
+  "description": "Fetch and parse RTF, CTF, Radmarathon, Gravel and other recreational cycling events from the rad-net.de (BDR) Breitensportkalender.",
+  "keywords": [
+    "rad-net",
+    "radnet",
+    "breitensport",
+    "rtf",
+    "ctf",
+    "radtourenfahrt",
+    "radmarathon",
+    "gravel",
+    "cycling",
+    "brevet",
+    "bdr",
+    "germany",
+    "scraper"
+  ],
+  "type": "module",
+  "license": "MIT",
+  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourname/radnet-breitensport"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "bin": {
+    "radnet": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "prepublishOnly": "npm run build",
+    "test": "node --test",
+    "cli": "node --experimental-strip-types src/cli.ts"
+  },
+  "dependencies": {
+    "node-html-parser": "^6.1.13"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "typescript": "^5.5.0"
+  }
+}
