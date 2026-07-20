@@ -2,8 +2,6 @@
 
 Fetch and parse recreational cycling events — **RTF** (Radtourenfahrten), **CTF** (Country-Tourenfahrten), Radmarathon, Gravel, Brevets and more — from the [rad-net.de Breitensportkalender](https://breitensport.rad-net.de/breitensportkalender/), the official calendar of the Bund Deutscher Radfahrer (BDR).
 
-There is no public JSON API, so this library talks to the portal's normal HTML search endpoint (the same one the website uses), handles pagination, and parses each row — plus the full detail page — into clean, typed objects.
-
 ```ts
 import { RadNet } from "radnet-breitensport";
 
