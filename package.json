@@ -22,7 +22,7 @@
   "author": "",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourname/radnet-breitensport"
+    "url": "git+https://github.com/aljoschairmer/radnet-breitensport.git"
   },
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -34,7 +34,7 @@
     }
   },
   "bin": {
-    "radnet": "./dist/cli.js"
+    "radnet": "dist/cli.js"
   },
   "files": [
     "dist",
