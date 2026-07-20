@@ -1,6 +1,6 @@
 {
   "name": "radnet-breitensport",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Fetch and parse RTF, CTF, Radmarathon, Gravel and other recreational cycling events from the rad-net.de (BDR) Breitensportkalender.",
   "keywords": [
     "rad-net",
