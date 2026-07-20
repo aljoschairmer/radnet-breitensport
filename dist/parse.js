@@ -1,6 +1,54 @@
 import { parse } from "node-html-parser";
 import { ICON_TO_TYPE } from "./constants.js";
-const PORTAL_ORIGIN = "https://breitensport.rad-net.de";
+const PORTAL_ORIGIN = "https://www.rad-net.de";
+/**
+ * The new portal wraps every internal link as
+ * `…/breitensportkalender.htm?url=<url-encoded path>&url_hash=<hmac>`.
+ * Return the decoded inner path (e.g. `/breitensportkalender/termine/2026/foo;123.html`),
+ * or `null` for the legacy direct-link format (which has no `url=` param).
+ */
+export function unwrapUrl(href) {
+    const m = href.replace(/&amp;/g, "&").match(/[?&]url=([^&]+)/);
+    if (!m)
+        return null;
+    try {
+        return decodeURIComponent(m[1]);
+    }
+    catch {
+        return m[1];
+    }
+}
+/** Resolve a possibly-relative href against an origin. */
+function absoluteUrl(href, origin) {
+    const h = href.replace(/&amp;/g, "&");
+    return /^https?:\/\//.test(h) ? h : origin + h;
+}
+/**
+ * Harvest the pre-signed pagination links from a result page.
+ *
+ * On the new portal every page link carries its own `url_hash`, so we cannot
+ * build them ourselves — we follow the ones the server rendered. Sort-toggle
+ * links (which also carry `lstart` but add a `sortbyn=` override) are skipped.
+ */
+export function parsePageLinks(html, origin = PORTAL_ORIGIN) {
+    const root = parse(html);
+    const byStart = new Map();
+    for (const a of root.querySelectorAll("a")) {
+        const href = a.getAttribute("href") ?? "";
+        const inner = unwrapUrl(href) ?? href;
+        const lm = inner.match(/[?&]lstart=(\d+)/);
+        if (!lm)
+            continue;
+        if (/[?&]sortbyn=/.test(inner))
+            continue; // skip sort-order toggles
+        const lstart = parseInt(lm[1], 10);
+        if (!byStart.has(lstart))
+            byStart.set(lstart, absoluteUrl(href, origin));
+    }
+    return [...byStart.entries()]
+        .map(([lstart, url]) => ({ lstart, url }))
+        .sort((a, b) => a.lstart - b.lstart);
+}
 /** Collapse whitespace and decode a couple of common entities. */
 function clean(text) {
     return text
@@ -30,7 +78,8 @@ function deobfuscateEmail(text) {
  * Parse a Breitensportkalender result-list page.
  * Returns the total hit count reported by the portal and the rows on this page.
  */
-export function parseList(html) {
+export function parseList(html, opts = {}) {
+    const origin = opts.origin ?? PORTAL_ORIGIN;
     const root = parse(html);
     const totalMatch = html.match(/Es wurden\s*<strong>\s*(\d+)\s*<\/strong>/);
     const total = totalMatch ? parseInt(totalMatch[1], 10) : 0;
@@ -40,7 +89,10 @@ export function parseList(html) {
         if (!anchor)
             continue;
         const href = anchor.getAttribute("href") ?? "";
-        const idMatch = href.match(/\/([^/;]+);(\d+)\.html/);
+        // New portal: href is the signed wrapper `…?url=<encoded path>&url_hash=…`.
+        // Decode the inner path to recover slug/id; legacy direct hrefs pass through.
+        const innerPath = unwrapUrl(href) ?? href;
+        const idMatch = innerPath.match(/\/?([^/;]+);(\d+)\.html/);
         const slug = idMatch ? idMatch[1] : "";
         const id = idMatch ? idMatch[2] : "";
         const cells = anchor.querySelectorAll("div.zelle");
@@ -79,7 +131,7 @@ export function parseList(html) {
             distances,
             club,
             lvAbbr,
-            detailUrl: href.startsWith("http") ? href : PORTAL_ORIGIN + href,
+            detailUrl: absoluteUrl(href, origin),
             struckThrough,
         });
     }

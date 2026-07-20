@@ -1,6 +1,6 @@
 # radnet-breitensport
 
-Fetch and parse recreational cycling events — **RTF** (Radtourenfahrten), **CTF** (Country-Tourenfahrten), Radmarathon, Gravel, Brevets and more — from the [rad-net.de Breitensportkalender](https://breitensport.rad-net.de/breitensportkalender/), the official calendar of the Bund Deutscher Radfahrer (BDR).
+Fetch and parse recreational cycling events — **RTF** (Radtourenfahrten), **CTF** (Country-Tourenfahrten), Radmarathon, Gravel, Brevets and more — from the [rad-net.de Breitensportkalender](https://www.rad-net.de/rad-net-portal/breitensportkalender.htm), the official calendar of the Bund Deutscher Radfahrer (BDR).
 
 ```ts
 import { RadNet } from "radnet-breitensport";
@@ -19,9 +19,18 @@ console.log(rtf[0]);
 //   id: '9976280', type: 'RTF', date: '2026-07-19',
 //   title: '41. Pfaffenwinkelradrundfahrt',
 //   distances: [55, 80, 125, 160], club: 'RC 1977 Altenstadt e.V.',
-//   lvAbbr: 'BAY', detailUrl: 'https://breitensport.rad-net.de/...', ...
+//   lvAbbr: 'BAY', detailUrl: 'https://www.rad-net.de/rad-net-portal/breitensportkalender.htm?url=…&url_hash=…', ...
 // }
 ```
+
+> **Portal migration (2026).** rad-net retired the standalone `breitensport.rad-net.de`
+> host and now serves the calendar through `www.rad-net.de/rad-net-portal/`, which
+> signs every detail/pagination link with a server-side `url_hash` (HMAC). This
+> package handles that transparently: the search itself is an unsigned form-style
+> request, and paginated/detail links are followed exactly as the portal signs
+> them — you never build a hash yourself. Because links are now signed, `detailUrl`
+> is the full signed wrapper URL, and `getEvent()` needs a list item or a full
+> (signed) detail URL — a bare numeric id can no longer be resolved to a URL.
 
 ## Install
 
@@ -90,7 +99,7 @@ Emails on the portal are lightly obfuscated (`name [at] host`) — they are deco
 ```bash
 npx radnet search --type RTF --lv Bayern --from 2026-07-17 --to 2026-10-17
 npx radnet search --type CTF --plz 34414 --radius 50 --json
-npx radnet show "https://breitensport.rad-net.de/breitensportkalender/termine/2026/foo;9976275.html"
+npx radnet show "https://www.rad-net.de/rad-net-portal/breitensportkalender.htm?url=%2Fbreitensportkalender%2Ftermine%2F2026%2Ffoo%3B9976275.html&url_hash=…"
 npx radnet categories     # list category names + codes
 npx radnet regions        # list Landesverband names + codes
 ```
@@ -117,6 +126,39 @@ npx radnet regions        # list Landesverband names + codes
 - **`struckThrough`** in the list marks events that are cancelled *or* already past — fetch the detail page for the authoritative `cancelled` flag and reason.
 - A few categories (e.g. Gravelride) don't render a type label in the list. When you search a specific category the client backfills it; a mixed `all` search may leave those rows' `type` empty (the detail page still has the correct `Art`).
 - Be polite: keep the default inter-page delay and cache results rather than hammering the portal.
+- **HTTP 403 from the WAF.** The new portal fronts requests with a WAF that may block plain `fetch` from some IPs (e.g. datacenter/CI). The client already sends a browser-like User-Agent and carries session cookies. If you still get 403, inject a browser-backed transport via `opts.fetch` (see below).
+
+### Fallback: browser-backed transport (Playwright)
+
+If plain `fetch` is blocked, render pages with a real browser and pass a
+`fetch`-compatible function into the client. No hash logic is needed — the
+browser receives the same pre-signed links the parser expects.
+
+```ts
+import { chromium } from "playwright"; // npm i -D playwright
+import { RadNet } from "radnet-breitensport";
+
+const browser = await chromium.launch();
+const ctx = await browser.newContext({ locale: "de-DE" });
+
+const browserFetch: typeof fetch = async (input) => {
+  const url = typeof input === "string" ? input : (input as Request).url;
+  const page = await ctx.newPage();
+  try {
+    const resp = await page.goto(url, { waitUntil: "domcontentloaded" });
+    return new Response(await page.content(), {
+      status: resp?.status() ?? 200,
+      headers: { "content-type": "text/html" },
+    });
+  } finally {
+    await page.close();
+  }
+};
+
+const client = new RadNet({ fetch: browserFetch });
+const events = await client.search({ category: "RTF", landesverband: "Bayern" });
+await browser.close();
+```
 
 ## Development
 

@@ -18,8 +18,10 @@ export interface RadNetOptions {
  */
 export declare class RadNet {
     private baseUrl;
+    private origin;
     private fetchImpl;
     private delayMs;
+    private cookie;
     constructor(opts?: RadNetOptions);
     private buildUrl;
     private getHtml;

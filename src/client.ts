@@ -19,14 +19,20 @@ function requestedTypeLabel(cat: SearchOptions["category"]): string | null {
   const entry = Object.entries(CATEGORIES).find(([, v]) => v === code);
   return entry ? entry[0] : null;
 }
-import { parseDetail, parseList } from "./parse.js";
+import { parseDetail, parseList, parsePageLinks, unwrapUrl } from "./parse.js";
 import type { DateInput, EventDetail, EventListItem, SearchOptions } from "./types.js";
 
-const DEFAULT_HEADERS = {
+/**
+ * The new portal sits behind a WAF that rejects obvious bot user-agents with
+ * HTTP 403. We present a realistic browser fingerprint. If a given runtime/IP
+ * is still blocked, inject a browser-backed transport via `opts.fetch`
+ * (see the Playwright snippet in the README).
+ */
+const DEFAULT_HEADERS: Record<string, string> = {
   "User-Agent":
-    "Mozilla/5.0 (compatible; radnet-breitensport npm package; +https://www.npmjs.com/package/radnet-breitensport)",
-  Accept: "text/html,application/xhtml+xml",
-  "Accept-Language": "de-DE,de;q=0.9",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+  Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+  "Accept-Language": "de-DE,de;q=0.9,en;q=0.8",
 };
 
 /** Format any accepted date input as the German dd.mm.yyyy the portal expects. */
@@ -79,11 +85,14 @@ export interface RadNetOptions {
  */
 export class RadNet {
   private baseUrl: string;
+  private origin: string;
   private fetchImpl: typeof fetch;
   private delayMs: number;
+  private cookie = "";
 
   constructor(opts: RadNetOptions = {}) {
     this.baseUrl = opts.baseUrl ?? BASE_URL;
+    this.origin = new URL(this.baseUrl).origin;
     this.fetchImpl = opts.fetch ?? globalThis.fetch;
     this.delayMs = opts.delayMs ?? 300;
     if (!this.fetchImpl) {
@@ -118,9 +127,21 @@ export class RadNet {
   }
 
   private async getHtml(url: string, signal?: AbortSignal): Promise<string> {
-    const res = await this.fetchImpl(url, { headers: DEFAULT_HEADERS, signal });
+    const headers: Record<string, string> = { ...DEFAULT_HEADERS, Referer: this.baseUrl };
+    if (this.cookie) headers.Cookie = this.cookie;
+    const res = await this.fetchImpl(url, { headers, signal, redirect: "follow" });
+    // Carry the WAF/session cookie forward across paginated requests.
+    const setCookies = (res.headers as { getSetCookie?: () => string[] }).getSetCookie?.() ?? [];
+    if (setCookies.length) {
+      this.cookie = setCookies.map((c) => c.split(";")[0]).join("; ");
+    }
     if (!res.ok) {
-      throw new Error(`rad-net request failed: HTTP ${res.status} for ${url}`);
+      throw new Error(
+        `rad-net request failed: HTTP ${res.status} for ${url}` +
+          (res.status === 403
+            ? " — the portal WAF blocked this request. Try a browser-backed transport (see README: opts.fetch + Playwright)."
+            : "")
+      );
     }
     return res.text();
   }
@@ -131,17 +152,26 @@ export class RadNet {
    */
   async search(opts: SearchOptions = {}): Promise<EventListItem[]> {
     const fallback = requestedTypeLabel(opts.category);
-    const first = await this.getHtml(this.buildUrl(opts, 0), opts.signal);
-    const { total, events } = parseList(first);
+    // Page 1: plain unsigned form-style GET (what the search form itself submits).
+    let html = await this.getHtml(this.buildUrl(opts, 0), opts.signal);
+    const { total, events } = parseList(html, { origin: this.origin });
 
     const totalPages = Math.ceil(total / PAGE_SIZE);
     const maxPages = Math.min(opts.maxPages ?? totalPages, totalPages);
 
     const all = [...events];
-    for (let page = 1; page < maxPages; page++) {
+    // Pages 2..n: follow the server's pre-signed pagination links (we can't sign
+    // URLs ourselves). Each page reveals more links, so we always find the next.
+    const visited = new Set<number>([0]);
+    while (visited.size < maxPages) {
+      const next = parsePageLinks(html, this.origin).find(
+        (l) => !visited.has(l.lstart) && l.lstart < maxPages * PAGE_SIZE
+      );
+      if (!next) break;
       if (this.delayMs) await sleep(this.delayMs);
-      const html = await this.getHtml(this.buildUrl(opts, page * PAGE_SIZE), opts.signal);
-      all.push(...parseList(html).events);
+      html = await this.getHtml(next.url, opts.signal);
+      visited.add(next.lstart);
+      all.push(...parseList(html, { origin: this.origin }).events);
     }
     if (fallback) for (const e of all) if (!e.type) e.type = fallback;
     return all;
@@ -157,16 +187,22 @@ export class RadNet {
       if (fallback && !e.type) e.type = fallback;
       return e;
     };
-    const first = await this.getHtml(this.buildUrl(opts, 0), opts.signal);
-    const { total, events } = parseList(first);
+    let html = await this.getHtml(this.buildUrl(opts, 0), opts.signal);
+    const { total, events } = parseList(html, { origin: this.origin });
     for (const e of events) yield fill(e);
 
     const totalPages = Math.ceil(total / PAGE_SIZE);
     const maxPages = Math.min(opts.maxPages ?? totalPages, totalPages);
-    for (let page = 1; page < maxPages; page++) {
+    const visited = new Set<number>([0]);
+    while (visited.size < maxPages) {
+      const next = parsePageLinks(html, this.origin).find(
+        (l) => !visited.has(l.lstart) && l.lstart < maxPages * PAGE_SIZE
+      );
+      if (!next) break;
       if (this.delayMs) await sleep(this.delayMs);
-      const html = await this.getHtml(this.buildUrl(opts, page * PAGE_SIZE), opts.signal);
-      for (const e of parseList(html).events) yield fill(e);
+      html = await this.getHtml(next.url, opts.signal);
+      visited.add(next.lstart);
+      for (const e of parseList(html, { origin: this.origin }).events) yield fill(e);
     }
   }
 
@@ -192,7 +228,9 @@ export class RadNet {
       id = ref.id;
     } else if (/^https?:\/\//.test(ref)) {
       url = ref;
-      id = ref.match(/;(\d+)\.html/)?.[1] ?? "";
+      // The signed wrapper URL-encodes the `;` as %3B, so decode the inner path first.
+      const inner = unwrapUrl(ref) ?? ref;
+      id = inner.match(/;(\d+)\.html/)?.[1] ?? ref.match(/(\d+)\.html/)?.[1] ?? "";
     } else {
       throw new Error(
         "getEvent needs an EventListItem or a full detail URL. A bare id can't be resolved to a URL (the slug is required by rad-net)."

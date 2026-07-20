@@ -26,7 +26,7 @@ Search options:
 Examples:
   radnet search --type RTF --lv Bayern --from 2026-07-17 --to 2026-10-17
   radnet search --type CTF --plz 34414 --radius 50 --json
-  radnet show "https://breitensport.rad-net.de/breitensportkalender/termine/2026/foo;9976275.html"
+  radnet show "https://www.rad-net.de/rad-net-portal/breitensportkalender.htm?url=%2Fbreitensportkalender%2Ftermine%2F2026%2Ffoo%3B9976275.html&url_hash=…"
 `;
 
 function parseArgs(argv: string[]): { cmd: string; positional: string[]; flags: Record<string, string | boolean> } {

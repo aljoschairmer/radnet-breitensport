@@ -5,7 +5,20 @@
  * These are the exact `value` codes the portal expects for its `art` (category)
  * and `lv` (Landesverband / regional association) query parameters.
  */
-export declare const BASE_URL = "https://breitensport.rad-net.de/breitensportkalender/termine/";
+/**
+ * Search endpoint of the current rad-net.de portal.
+ *
+ * The legacy host `breitensport.rad-net.de` is being retired. The new portal at
+ * `www.rad-net.de/rad-net-portal/` proxies the same TYPO3 calendar, but wraps
+ * every navigation/detail link as `?url=<path>&url_hash=<hmac>` where the hash
+ * is signed with a server-side secret we cannot reproduce. We therefore never
+ * build signed URLs ourselves: page 1 is fetched via a plain (unsigned) form-
+ * style GET — exactly what the search form submits — and every following page
+ * is fetched by following the pre-signed pagination links found in the markup.
+ */
+export declare const BASE_URL = "https://www.rad-net.de/rad-net-portal/breitensportkalender.htm";
+/** Legacy host, kept for reference / backward compatibility. */
+export declare const LEGACY_BASE_URL = "https://breitensport.rad-net.de/breitensportkalender/termine/";
 /** Number of result rows the portal returns per page. */
 export declare const PAGE_SIZE = 30;
 /**
