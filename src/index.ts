@@ -1,5 +1,7 @@
 export { RadNet, toGermanDate } from "./client.js";
 export type { RadNetOptions } from "./client.js";
+export { createBrowserFetch } from "./browser-fetch.js";
+export type { BrowserFetch, BrowserFetchOptions } from "./browser-fetch.js";
 export { parseList, parseDetail, germanToIso, parsePageLinks, unwrapUrl } from "./parse.js";
 export type { PageLink } from "./parse.js";
 export {

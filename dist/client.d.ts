@@ -1,3 +1,4 @@
+import { type BrowserFetchOptions } from "./browser-fetch.js";
 import type { DateInput, EventDetail, EventListItem, SearchOptions } from "./types.js";
 /** Format any accepted date input as the German dd.mm.yyyy the portal expects. */
 export declare function toGermanDate(input: DateInput): string;
@@ -23,6 +24,26 @@ export declare class RadNet {
     private delayMs;
     private cookie;
     constructor(opts?: RadNetOptions);
+    /**
+     * Create a client backed by a real Chromium (via the optional `playwright`
+     * peer dependency), to get past the portal WAF that blocks plain `fetch`
+     * (HTTP 403). Returns the client plus a `close()` you must call when done.
+     *
+     * @example
+     * const { client, close } = await RadNet.withBrowser();
+     * try {
+     *   const events = await client.search({ category: "RTF", landesverband: "Bayern" });
+     * } finally {
+     *   await close();
+     * }
+     */
+    static withBrowser(opts?: BrowserFetchOptions & {
+        baseUrl?: string;
+        delayMs?: number;
+    }): Promise<{
+        client: RadNet;
+        close: () => Promise<void>;
+    }>;
     private buildUrl;
     private getHtml;
     /**

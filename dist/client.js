@@ -14,6 +14,7 @@ function requestedTypeLabel(cat) {
     return entry ? entry[0] : null;
 }
 import { parseDetail, parseList, parsePageLinks, unwrapUrl } from "./parse.js";
+import { createBrowserFetch } from "./browser-fetch.js";
 /**
  * The new portal sits behind a WAF that rejects obvious bot user-agents with
  * HTTP 403. We present a realistic browser fingerprint. If a given runtime/IP
@@ -82,6 +83,24 @@ export class RadNet {
         if (!this.fetchImpl) {
             throw new Error("No fetch implementation available. Use Node >=18 or pass opts.fetch.");
         }
+    }
+    /**
+     * Create a client backed by a real Chromium (via the optional `playwright`
+     * peer dependency), to get past the portal WAF that blocks plain `fetch`
+     * (HTTP 403). Returns the client plus a `close()` you must call when done.
+     *
+     * @example
+     * const { client, close } = await RadNet.withBrowser();
+     * try {
+     *   const events = await client.search({ category: "RTF", landesverband: "Bayern" });
+     * } finally {
+     *   await close();
+     * }
+     */
+    static async withBrowser(opts = {}) {
+        const { fetch: browserFetch, close } = await createBrowserFetch(opts);
+        const client = new RadNet({ fetch: browserFetch, baseUrl: opts.baseUrl, delayMs: opts.delayMs });
+        return { client, close };
     }
     buildUrl(opts, lstart) {
         const start = toGermanDate(opts.startDate ?? new Date());

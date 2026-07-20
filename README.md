@@ -31,6 +31,11 @@ console.log(rtf[0]);
 > them — you never build a hash yourself. Because links are now signed, `detailUrl`
 > is the full signed wrapper URL, and `getEvent()` needs a list item or a full
 > (signed) detail URL — a bare numeric id can no longer be resolved to a URL.
+>
+> The portal also runs a WAF that may answer plain `fetch` with **HTTP 403**
+> (common on datacenter/CI IPs). If you hit that, use the built-in browser
+> transport — `RadNet.withBrowser()` — described under
+> [Browser-backed transport](#browser-backed-transport-built-in).
 
 ## Install
 
@@ -128,36 +133,47 @@ npx radnet regions        # list Landesverband names + codes
 - Be polite: keep the default inter-page delay and cache results rather than hammering the portal.
 - **HTTP 403 from the WAF.** The new portal fronts requests with a WAF that may block plain `fetch` from some IPs (e.g. datacenter/CI). The client already sends a browser-like User-Agent and carries session cookies. If you still get 403, inject a browser-backed transport via `opts.fetch` (see below).
 
-### Fallback: browser-backed transport (Playwright)
+### Browser-backed transport (built in)
 
-If plain `fetch` is blocked, render pages with a real browser and pass a
-`fetch`-compatible function into the client. No hash logic is needed — the
-browser receives the same pre-signed links the parser expects.
+If plain `fetch` is blocked, use the built-in browser transport. It renders
+pages with a real Chromium so the WAF sees a genuine browser; no hash logic is
+involved — the browser just receives the same pre-signed links the parser
+already understands. Playwright is an **optional** peer dependency, loaded only
+when you use this path:
+
+```bash
+npm install --save-dev playwright
+npx playwright install chromium
+```
+
+The convenient way — `RadNet.withBrowser()` returns the client plus a `close()`:
 
 ```ts
-import { chromium } from "playwright"; // npm i -D playwright
 import { RadNet } from "radnet-breitensport";
 
-const browser = await chromium.launch();
-const ctx = await browser.newContext({ locale: "de-DE" });
+const { client, close } = await RadNet.withBrowser();
+try {
+  const events = await client.search({ category: "RTF", landesverband: "Bayern" });
+  console.log(events);
+} finally {
+  await close();
+}
+```
 
-const browserFetch: typeof fetch = async (input) => {
-  const url = typeof input === "string" ? input : (input as Request).url;
-  const page = await ctx.newPage();
-  try {
-    const resp = await page.goto(url, { waitUntil: "domcontentloaded" });
-    return new Response(await page.content(), {
-      status: resp?.status() ?? 200,
-      headers: { "content-type": "text/html" },
-    });
-  } finally {
-    await page.close();
-  }
-};
+Or wire the transport yourself via `createBrowserFetch()` (e.g. to reuse one
+browser across many clients, or pass `{ headless: false }` if the WAF also
+blocks headless Chromium):
 
-const client = new RadNet({ fetch: browserFetch });
-const events = await client.search({ category: "RTF", landesverband: "Bayern" });
-await browser.close();
+```ts
+import { RadNet, createBrowserFetch } from "radnet-breitensport";
+
+const { fetch, close } = await createBrowserFetch({ headless: false });
+try {
+  const client = new RadNet({ fetch });
+  const events = await client.search({ category: "RTF", landesverband: "Bayern" });
+} finally {
+  await close();
+}
 ```
 
 ## Development
